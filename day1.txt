@@ -1,20 +1,26 @@
 
-class User:
-    name='shashi'
-    state='MH'
+class RBI:
+    def withdraw(amount):
+        pass
+    def depositAmount(amount):
+        pass
+    def checkBalance():
+        pass
 
-    # constructor
-    def __init__(self,email="user@mail.com",city="pune"):
+class SBI(RBI):
 
-        self.email=email
-        self.city=city
+    def withdraw(amount):
+         print("withdraw in SBI")
 
-    # regular method
-    def printData(self):
-        print(self.name,self.state)
 
-# creating object
-userdata= User(email="admin@mail.com",city="Chennai")
-print(userdata.city,userdata.email)
-userdata.printData()
+    def openSalaryAccount(self):
+        print("Salary Acc opened in SBI")
+
+
+bank= SBI()
+bank.openSalaryAccount()
+bank.withdraw()
+
+
+
 
