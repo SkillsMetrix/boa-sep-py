@@ -1,26 +1,26 @@
 
-class RBI:
-    def withdraw(amount):
-        pass
-    def depositAmount(amount):
-        pass
-    def checkBalance():
-        pass
+from inheritence import RBI
 
 class SBI(RBI):
-
-    def withdraw(amount):
-         print("withdraw in SBI")
-
+    balance=100
+    def withdraw(self,amount):
+         if amount > self.balance:
+            print('invalid amount, not enough balance')
+         else:
+            self.balance -=amount
+         
+    def checkBalance(self):
+        print('Available  balance ', self.balance)
+    def depositAmount(self,amount):
+        self.balance +=amount
 
     def openSalaryAccount(self):
         print("Salary Acc opened in SBI")
 
-
 bank= SBI()
-bank.openSalaryAccount()
-bank.withdraw()
-
-
-
-
+ 
+bank.checkBalance()
+bank.depositAmount(100)
+bank.checkBalance()
+bank.withdraw(100)
+bank.checkBalance()
