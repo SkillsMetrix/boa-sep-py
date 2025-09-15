@@ -1,13 +1,20 @@
 
-userAge=input('Enter age:  ')
+class User:
+    name='shashi'
+    state='MH'
 
-age=(int(userAge))
+    # constructor
+    def __init__(self,email="user@mail.com",city="pune"):
 
-if(age <= 0):
-    print('Enter Valid Age')
-elif (age < 18):
-    print('Not Allwed to Vote')
-elif (age >=18  and age < 80):
-    print('Allowed to vote')
-else:
-    print('senior Citizen')
+        self.email=email
+        self.city=city
+
+    # regular method
+    def printData(self):
+        print(self.name,self.state)
+
+# creating object
+userdata= User(email="admin@mail.com",city="Chennai")
+print(userdata.city,userdata.email)
+userdata.printData()
+
