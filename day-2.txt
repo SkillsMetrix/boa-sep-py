@@ -20,6 +20,20 @@ def loadUsers(db:Session=Depends(get_connection)):
     data= db.query(schemas.UserApp).all()
     return {"message":data}
 
+@router.put("/updateuser/{uname}")
+def addToDB(uname:str,payload: models.User,db:Session=Depends(get_connection)):
+    data= db.query(schemas.UserApp).filter(schemas.UserApp.uname == uname)
+     
+    if data.first() == None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,detail="Given Name not Found"
+        )
+    
+    data.update(payload.dict(),synchronize_session=False)
+    db.commit()
+    
+    return {"message":data}
+
 @router.get("/loaduser/{uname}")
 def loadUser(uname:str,db:Session=Depends(get_connection)):
     data= db.query(schemas.UserApp).filter(schemas.UserApp.uname == uname).first()
