@@ -19,3 +19,53 @@ def get_connection():
         yield db
     finally:
         db.close()
+--------
+#schemas.py
+from sqlalchemy import Column,String
+from .database import Base
+
+class UserApp(Base):
+    __tablename__="USERAPP"
+
+    uname=Column(String,primary_key=True)
+    email=Column(String)
+    password=Column(String)
+
+--------
+
+#models.py
+
+from pydantic import BaseModel
+# it make sure ,user give all the value
+class User(BaseModel):
+    username: str
+    email: str
+    password: str
+
+
+--------------
+#crudapp
+
+
+from fastapi import FastAPI
+
+app= FastAPI()
+
+@app.get("/welcome")
+def showWelcome():
+    print('welcome')
+    return {"message":"Welcome to FastAPI"}
+
+-----------
+
+#myapp
+
+from fastapi import FastAPI
+from .database import engine
+from . import schemas
+
+schemas.Base.metadata.create_all(bind=engine)
+app= FastAPI()
+
+
+
