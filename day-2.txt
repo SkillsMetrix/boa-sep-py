@@ -1,17 +1,4 @@
 
-from fastapi import FastAPI
-from .database import engine
-from . import schemas,crudapp
-
-schemas.Base.metadata.create_all(bind=engine)
-app= FastAPI()
-
-app.include_router(crudapp.router)
-
-
----
-
-
 from fastapi import FastAPI,status,HTTPException,APIRouter,Depends
 from .import schemas,models
 from sqlalchemy.orm import Session
@@ -19,7 +6,11 @@ from .database import get_connection
 
 router= APIRouter(tags=["User Application"])
 
-@router.get("/welcome")
-def showWelcome():
-    print('welcome')
-    return {"message":"Welcome to FastAPI"}
+@router.post("/adduser")
+def addToDB(payload: models.User,db:Session=Depends(get_connection)):
+
+    postData= schemas.UserApp(**payload.dict())
+    db.add(postData)
+    db.commit()
+    
+    return {"message":postData}
