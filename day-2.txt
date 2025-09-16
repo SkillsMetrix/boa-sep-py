@@ -1,3 +1,25 @@
+
+from fastapi import FastAPI,status,HTTPException,APIRouter,Depends
+from .import schemas,models
+from sqlalchemy.orm import Session
+from .database import get_connection
+
+router= APIRouter(tags=["User Application"])
+
+@router.post("/adduser")
+def addToDB(payload: models.User,db:Session=Depends(get_connection)):
+
+    postData= schemas.UserApp(**payload.dict())
+    db.add(postData)
+    db.commit()
+    
+    return {"message":postData}
+
+@router.get("/loadusers")
+def loadUsers(db:Session=Depends(get_connection)):
+    data= db.query(schemas.UserApp).all()
+    return {"message":data}
+
 @router.get("/loaduser/{uname}")
 def loadUser(uname:str,db:Session=Depends(get_connection)):
     data= db.query(schemas.UserApp).filter(schemas.UserApp.uname == uname).first()
