@@ -1,3 +1,15 @@
+from fastapi import FastAPI
+
+app= FastAPI()
+
+@app.get("/")
+def showMessage():
+    return {"message":" welcome to FAST-API"}
+
+
+-------
+
+
 - name: update cache
   apt:
     update_cache: true
