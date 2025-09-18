@@ -1,50 +1,40 @@
-
-
-- name: check the background of remote machine
-  apt:
-    update_cache: true
-    cache_valid_time: 3600
-
-- name: Gather OS Info
-  setup:
-    gather_subset:
-      - "os_family"
-
-- name: print os Information
-  debug:
-    msg: "the remote os is {{ansible_os_family}}"
-  
-
-
-
-
----------
-
-- name: install apache to the remote machine
-  apt:
-    name:
-      - apache2
-    state: latest
-
-- name: check the status of installation
-  command: systemctl status apache2
-  register: apache_status
-
-- name: print the status
-  debug:
-    msg: "{{apache_status.stdout}}"
-
-
----
-
 - hosts: db
   become: true
-
   pre_tasks:
-    - name: load it before Main
-      import_tasks: pretask.yaml
+    - name: update cache
+      apt:
+        update_cache: true
   
-  tasks:
-    - name: call main tasks
-      import_tasks: posttask.yaml
+  tasks: 
+    - name: install required softwares
+      apt:
+        name:
+          - python3
+          - python3-pip
+          - python3-venv
+        state: latest
+
+    - name: create fastapi dir on remote machine
+      file:
+        path: /opt/fastapi_app
+        state: directory
+    - name: copy the files to the destination
+      copy:
+        src: fastapi_app/
+        dest: /opt/fastapi_app
+  
+    - name: create venv on target machine
+      command: python3 -m venv /opt/fastapi_app/venv
+  
+    - name: install fastapi and uvicorn on remote
+      command: /opt/fastapi_app/venv/bin/pip install fastapi uvicorn
+
+    - name: launch application
+      shell: |
+        nohup /opt/fastapi_app/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 &
+      args:
+        chdir: /opt/fastapi_app
+
+
+
 
