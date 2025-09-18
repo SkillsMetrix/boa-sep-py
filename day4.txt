@@ -1,62 +1,6 @@
-from fastapi import FastAPI
-
-app= FastAPI()
-
-@app.get("/")
-def showMessage():
-    return {"message":" welcome to FAST-API"}
-
-
--------
-
-
-- name: update cache
-  apt:
-    update_cache: true
-  
-
-- name: install required softwares
-  apt:
-    name:
-      - python3
-      - python3-pip
-      - python3-venv
-    state: latest
-
-- name: create fastapi dir on remote machine
-  file:
-    path: /opt/fastapi_app
-    state: directory
-- name: copy the files to the destination
-  copy:
-    src: fastapi_app/
-    dest: /opt/fastapi_app
-
-
-----
-
-
-- name: create venv on target machine
-  command: python3 -m venv /opt/fastapi_app/venv
-  
-- name: install fastapi and uvicorn on remote
-  command: /opt/fastapi_app/venv/bin/pip install fastapi uvicorn
-
-- name: launch application
-  shell: |
-    nohup /opt/fastapi_app/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000 &
-  args:
-    chdir: /opt/fastapi_app
-
-
-------
-
-
-- hosts: db
-  become: true
-  pre_tasks:
-    - name: load pre task
-      import_tasks: pretask1.yaml
-  post_tasks:
-    - name: load post job
-      import_tasks: posttask.yaml
+ sudo systemctl stop apache2
+    3  sudo systemctl disable  apache2
+    4  sudo apt remove --purge apache2
+    5  sudo lsof -i :80
+    6  sudo systemctl status  apache2
+    7  cat /var/www/html/index.html
