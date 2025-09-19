@@ -21,3 +21,19 @@
   when:
     - ansible_os_family == "RedHat"
     - ansible_memtotal_mb >= min_required_ram_mb
+
+
+
+--------
+
+
+install_apache_flag: false
+min_required_ram_mb: 1024
+
+debian_packages:
+  - python3
+  - apache2
+
+redhat_packages:
+  - python3
+  - httpd
