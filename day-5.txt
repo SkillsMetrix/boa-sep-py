@@ -1,0 +1,23 @@
+- name: check the background
+  debug:
+    msg: "OS: {{ansible_os_family}} , RAM : {{ansible_memtotal_mb}} : MB"
+
+- name: install packages on respective Debian OS families
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  loop: "{{debian_packages}}"
+  when:
+    - ansible_os_family == "Debian"
+    - ansible_memtotal_mb >= min_required_ram_mb
+
+- name: install packages on respective RedHAt/Centos families
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  loop: "{{redhat_packages}}"
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_memtotal_mb >= min_required_ram_mb
