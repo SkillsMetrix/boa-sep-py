@@ -1,32 +1,19 @@
-- name: check the background
-  debug:
-    msg: "OS: {{ansible_os_family}} , RAM : {{ansible_memtotal_mb}} : MB"
-
-- name: install packages on respective Debian OS families
+- name: update cache
   apt:
-    name: "{{item}}"
-    state: present
+    name: nginx
+    state: latest
     update_cache: yes
-  loop: "{{debian_packages}}"
-  when:
-    - ansible_os_family == "Debian"
-    - ansible_memtotal_mb >= min_required_ram_mb
 
-- name: install packages on respective RedHAt/Centos families
-  apt:
-    name: "{{item}}"
-    state: present
-    update_cache: yes
-  loop: "{{redhat_packages}}"
-  when:
-    - ansible_os_family == "RedHat"
-    - ansible_memtotal_mb >= min_required_ram_mb
+--
 
-- name: check the text value
-  command: cat /home/ubuntu/userdetails.txt
-  register: user_data
 
-- name: print if exist
-  debug:
-    var: user_data.stdout
-  when: user_data.stdout.find('superuser') !=-1
+- import_tasks: subtask.yaml
+
+- name: copy index file to destination
+  template: src=index.html dest=/usr/share/nginx/html/index.html
+
+- name: update index file to destination
+  template: src=update.html dest=/usr/share/nginx/html/index.html
+
+  notify: 
+    - restart nginx
