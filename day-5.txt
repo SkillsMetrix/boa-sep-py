@@ -22,18 +22,11 @@
     - ansible_os_family == "RedHat"
     - ansible_memtotal_mb >= min_required_ram_mb
 
+- name: check the text value
+  command: cat /home/ubuntu/userdetails.txt
+  register: user_data
 
-
---------
-
-
-install_apache_flag: false
-min_required_ram_mb: 1024
-
-debian_packages:
-  - python3
-  - apache2
-
-redhat_packages:
-  - python3
-  - httpd
+- name: print if exist
+  debug:
+    var: user_data.stdout
+  when: user_data.stdout.find('superuser') !=-1
